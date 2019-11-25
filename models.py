@@ -47,10 +47,14 @@ def cnn(inp_dim, vocab_size, embed_size, num_classes, learn_rate):
     network = global_max_pool(network)
     network = dropout(network, 0.50)
     network = fully_connected(network, num_classes, activation='softmax', name="fc")
-    network = regression(network, optimizer='adam', learning_rate=learn_rate,
+    net = regression(network, optimizer='adam', learning_rate=learn_rate,
                          loss='categorical_crossentropy', name='target')
+    model = tflearn.DNN(net, tensorboard_verbose=0)
 
-    model = tflearn.DNN(network, tensorboard_verbose=0)
+    # This argument is needed to call get_weights on DNN object
+    print("initial_weights")
+    print(model.get_weights(network.W))
+
     return model
 
 

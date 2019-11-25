@@ -8,7 +8,7 @@ from models import get_model
 
 
 data = "twitter"
-model_type = "cnn"
+model_type = "lstm"
 vector_type = "random"
 HASH_REMOVE= None
 MAX_FEATURES = 2
@@ -103,6 +103,8 @@ def get_train_test(data, x_text, labels):
 def train(data_dict, model_type, vector_type, embed_size, dump_embeddings=False):
 
     data, trainX, trainY, testX, testY, vocab_processor = return_data(data_dict)
+    print(trainX)
+    print(trainX.shape)
     # trainX = trainX.reshape(trainX.shape[0], trainX.shape[1], 1)
     # testX = testX.reshape(testX.shape[0], testX.shape[1], 1)
     vocab_size = len(vocab_processor.vocabulary_)
@@ -110,11 +112,13 @@ def train(data_dict, model_type, vector_type, embed_size, dump_embeddings=False)
     vocab = vocab_processor.vocabulary_._mapping
 
     print("Running Model: " + model_type + " with word vector initiliazed with " + vector_type + " word vectors.")
-    model = get_model(model_type, trainX.shape[1], vocab_size, embed_size, NUM_CLASSES, LEARN_RATE)
+    model = get_model(model_type, trainX.shape[1], vocab_size, embed_size, 3, LEARN_RATE)
 
-    initial_weights = model.get_weights()
-    shuffle_weights(model, initial_weights)
-    print(initial_weights)
+    if (model_type == 'lstm'):
+        initial_weights = model.get_weights()
+        shuffle_weights(model, initial_weights)
+        print("initial_weights")
+        print(initial_weights)
 
 def return_data(data_dict):
     return data_dict["data"], data_dict["trainX"], data_dict["trainY"], data_dict["testX"], data_dict["testY"], data_dict["vocab_processor"]

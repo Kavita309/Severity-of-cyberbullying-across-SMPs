@@ -8,10 +8,12 @@ from sklearn.metrics import classification_report, f1_score, accuracy_score, con
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble  import GradientBoostingClassifier, RandomForestClassifier
+
 HASH_REMOVE = None
 NO_OF_FOLDS = 10
 WORD = False
 N_CLASS = 4
+
 def load_data(filename):
     data = pickle.load(open(filename, 'rb'))
     x_text = []
@@ -24,6 +26,7 @@ def load_data(filename):
         labels.append(data[i][2])
     return x_text,labels
 
+
 def get_model(m_type):
     if m_type == 'lr':
         logreg = LogisticRegression(class_weight="balanced")
@@ -34,9 +37,10 @@ def get_model(m_type):
     elif m_type == "svm":
         logreg = LinearSVC(class_weight="balanced")
     else:
-        print ("ERROR: Please specify a correst model")
+        print ("ERROR: Please specify a correct model")
         return None
     return logreg
+
 
 def train(x_text, labels, MODEL_TYPE):
 
@@ -57,9 +61,10 @@ def train(x_text, labels, MODEL_TYPE):
         features = comments_tfidf
         #print(features)
 
-        dict1 = {'L':0,'M':1,'H':2,'none':3}
-        labels = np.array([dict1[b] for b in labels])
-        print (labels)
+    dict1 = {'L':0,'M':1,'H':2,'none':3}
+    labels = np.array([dict1[b] for b in labels])
+    print (labels)
+
     from collections import Counter
     print(Counter(labels))
     classification_model(features, labels, model_type)
@@ -69,6 +74,7 @@ def train(x_text, labels, MODEL_TYPE):
     # else:
     #     for model_type in models:
     #         classification_model(features, labels, model_type)
+
 
 
 def get_scores(y_true, y_pred):
@@ -84,12 +90,14 @@ def get_scores(y_true, y_pred):
             recall_score(y_true, y_pred,  average=None),
             f1_score(y_true, y_pred, average=None)])
 
+
 def print_scores(scores):
     for i in range(N_CLASS):
         if(i!=0):
             print ("Precision Class %d (avg): %0.3f (+/- %0.3f)" % (i,scores[:, i].mean(), scores[:, i].std() * 2))
             print ("Recall Class %d (avg): %0.3f (+/- %0.3f)" % (i,scores[:,  N_CLASS+i].mean(), scores[:,N_CLASS+i].std() * 2))
             print ("F1_score Class %d (avg): %0.3f (+/- %0.3f)" % (i,scores[:, N_CLASS*2+i].mean(), scores[:,  N_CLASS*2+i].std() * 2))
+
 
 def classification_model(X, Y, model_type):
     X, Y = shuffle(X, Y, random_state=42)

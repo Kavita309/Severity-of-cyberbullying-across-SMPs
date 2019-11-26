@@ -10,13 +10,13 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import roc_auc_score
 
 data = "twitter"
-model_type = "blstm"
-vector_type = "sswe"
+model_type = "cnn"
+vector_type = "glove"
 HASH_REMOVE= None
 MAX_FEATURES = 2
 NUM_CLASSES = None
 LEARN_RATE = 0.01
-EPOCHS = 2
+EPOCHS = 10
 BATCH_SIZE = 128
 x = "C:/Users/kavita/Desktop/BTP_Downloads/twitterp.pkl"
 
@@ -67,6 +67,12 @@ def get_embeddings_dict(vector_type, emb_dim):
         emb_dim==50
         sep = '\t'
         vector_file = 'DataSets/sswe-u.txt'
+    elif vector_type =="glove":
+        sep = ' '
+        if data == "wiki":
+            vector_file = 'DataSets/glove.6B.' + str(emb_dim) + 'd.txt'
+        else:
+            vector_file = 'DataSets/glove.twitter.27B.' + str(emb_dim) + 'd.txt'
     else:
         print ("ERROR: Please specify a correct model or SSWE cannot be loaded with embed size of: " + str(emb_dim))
         return None

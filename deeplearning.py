@@ -10,13 +10,13 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import roc_auc_score
 
 data = "twitter"
-model_type = "cnn"
+model_type = "blstm"
 vector_type = "sswe"
 HASH_REMOVE= None
 MAX_FEATURES = 2
 NUM_CLASSES = None
 LEARN_RATE = 0.01
-EPOCHS = 10
+EPOCHS = 2
 BATCH_SIZE = 128
 x = "C:/Users/kavita/Desktop/BTP_Downloads/twitterp.pkl"
 
@@ -24,7 +24,6 @@ def run_model(data, oversampling_rate, model_type, vector_type, embed_size):
     x_text, labels = get_data(data, oversampling_rate)
     data_dict = get_train_test(data,  x_text, labels)
     precision, recall, f1_score = train(data_dict, model_type, vector_type, embed_size)
-
 
 def load_data(filename):
     data = pickle.load(open(filename, 'rb'))

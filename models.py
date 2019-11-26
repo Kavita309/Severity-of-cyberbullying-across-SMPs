@@ -55,7 +55,7 @@ def cnn(inp_dim, vocab_size, embed_size, num_classes, learn_rate):
     # print("initial_weights")
     # print(model.get_weights(network.W))
 
-    return model
+    return model,network
 
 
 def blstm(inp_dim,vocab_size, embed_size, num_classes, learn_rate):
@@ -116,7 +116,7 @@ def blstm_atten(inp_dim, vocab_size, embed_size, num_classes, learn_rate):
 
 def get_model(m_type,inp_dim, vocab_size, embed_size, num_classes, learn_rate):
     if m_type == 'cnn':
-        model = cnn(inp_dim, vocab_size, embed_size, num_classes, learn_rate)
+        model, network = cnn(inp_dim, vocab_size, embed_size, num_classes, learn_rate)
     elif m_type == 'lstm':
         model = lstm_keras(inp_dim, vocab_size, embed_size, num_classes, learn_rate)
     elif m_type == "blstm":
@@ -126,4 +126,8 @@ def get_model(m_type,inp_dim, vocab_size, embed_size, num_classes, learn_rate):
     else:
         print ("ERROR: Please specify a correst model")
         return None
-    return model
+
+    if m_type == 'cnn':
+        return model,network
+    else:
+        return model

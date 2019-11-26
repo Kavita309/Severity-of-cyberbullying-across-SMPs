@@ -10,15 +10,15 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import roc_auc_score
 
 data = "twitter"
-model_type = "lstm"
+model_type = "cnn"
 vector_type = "sswe"
 HASH_REMOVE= None
 MAX_FEATURES = 2
 NUM_CLASSES = None
 LEARN_RATE = 0.01
-EPOCHS = 2
+EPOCHS = 10
 BATCH_SIZE = 128
-x = "C:/Users/hp/Desktop/BTP_Project/DataSets/twitterp.pkl"
+x = "C:/Users/kavita/Desktop/BTP_Downloads/twitterp.pkl"
 
 def run_model(data, oversampling_rate, model_type, vector_type, embed_size):
     x_text, labels = get_data(data, oversampling_rate)
@@ -69,7 +69,7 @@ def get_embeddings_dict(vector_type, emb_dim):
         sep = '\t'
         vector_file = 'DataSets/sswe-u.txt'
     else:
-        print ("ERROR: Please specify a correst model or SSWE cannot be loaded with embed size of: " + str(emb_dim))
+        print ("ERROR: Please specify a correct model or SSWE cannot be loaded with embed size of: " + str(emb_dim))
         return None
 
     embed = get_embedding_weights(vector_file, sep)
@@ -177,11 +177,32 @@ def train(data_dict, model_type, vector_type, embed_size, dump_embeddings=False)
     vocab = vocab_processor.vocabulary_._mapping
 
     print("Running Model: " + model_type + " with word vector initiliazed with " + vector_type + " word vectors.")
-    model = get_model(model_type, trainX.shape[1], vocab_size, embed_size, 4, LEARN_RATE)
-    initial_weights = model.get_weights()
-    shuffle_weights(model, initial_weights)
+
+    if(model_type!="cnn"):
+        model = get_model(model_type, trainX.shape[1], vocab_size, embed_size, 4, LEARN_RATE)
+        initial_weights = model.get_weights()
+        shuffle_weights(model, initial_weights)
+    else:
+        # print("CNNNNNN")
+        model,network = get_model(model_type, trainX.shape[1], vocab_size, embed_size, 4, LEARN_RATE)
+        initial_weights = model.get_weights(network.W)
         # print("initial_weights")
         # print(initial_weights)
+        # print(initial_weights.shape)
+        weights = [np.random.permutation(w.flat).reshape(w.shape) for w in initial_weights]
+        # print(weights)
+        weights = np.asarray(weights).reshape(initial_weights.shape)
+        # ----------------
+        # print("Hello")
+        # print(weights)
+        # ------------------
+        # Faster, but less random: only permutes along the first dimension
+        # weights = [np.random.permutation(w) for w in weights]
+        model.set_weights(network.W, weights)
+
+    print("initial_weights")
+    print(initial_weights)
+
     if(model_type == 'cnn'):
         if(vector_type!="random"):
             print("Word vectors used: " + vector_type)
@@ -199,7 +220,7 @@ def train(data_dict, model_type, vector_type, embed_size, dump_embeddings=False)
         else:
             model.fit(trainX, trainY, epochs=EPOCHS, shuffle=True, batch_size=BATCH_SIZE,
                   verbose=1)
-    return  evaluate_model(model, testX, testY)
+    return evaluate_model(model, testX, testY)
 
 def return_data(data_dict):
     return data_dict["data"], data_dict["trainX"], data_dict["trainY"], data_dict["testX"], data_dict["testY"], data_dict["vocab_processor"]
@@ -213,6 +234,13 @@ def shuffle_weights(model, weights=None):
     :param list(ndarray) weights: The model's weights will be replaced by a random permutation of these weights.
       If `None`, permute the model's current weights.
     """
+    print("CHECK")
+    print(type(weights))
+    print(type(weights[0]))
+    print(type(weights[0].shape))
+    print(weights[0].shape)
+    print(weights[0].flat)
+    print("END")
     if weights is None:
         weights = model.get_weights()
     weights = [np.random.permutation(w.flat).reshape(w.shape) for w in weights]

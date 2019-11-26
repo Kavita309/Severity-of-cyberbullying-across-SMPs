@@ -116,7 +116,7 @@ def classification_model(X, Y, model_type):
     print_scores(np.array(scores))
 
 
-x = "C:/Users/kavita/Desktop/BTP_Downloads/twitterp.pkl"
+x = "C:/Users/hp/Desktop/BTP_Project/DataSets/twitterp.pkl"
 x_text,labels = load_data(x)
 model_type='random_forest'
 train(x_text, labels, "all")

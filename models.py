@@ -52,8 +52,8 @@ def cnn(inp_dim, vocab_size, embed_size, num_classes, learn_rate):
     model = tflearn.DNN(net, tensorboard_verbose=0)
 
     # This argument is needed to call get_weights on DNN object
-    print("initial_weights")
-    print(model.get_weights(network.W))
+    # print("initial_weights")
+    # print(model.get_weights(network.W))
 
     return model
 

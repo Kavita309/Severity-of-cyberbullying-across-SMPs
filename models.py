@@ -18,9 +18,7 @@ from keras import backend as K
 from keras.engine.topology import Layer, InputSpec
 from keras import initializers, optimizers
 
-
 def lstm_keras(inp_dim, vocab_size, embed_size, num_classes, learn_rate):
-#     K.clear_session()
     model = Sequential()
     model.add(Embedding(vocab_size, embed_size, input_length=inp_dim, trainable=True))
     model.add(Dropout(0.25))
@@ -50,16 +48,10 @@ def cnn(inp_dim, vocab_size, embed_size, num_classes, learn_rate):
     net = regression(network, optimizer='adam', learning_rate=learn_rate,
                          loss='categorical_crossentropy', name='target')
     model = tflearn.DNN(net, tensorboard_verbose=0)
-
-    # This argument is needed to call get_weights on DNN object
-    # print("initial_weights")
-    # print(model.get_weights(network.W))
-
     return model,network
 
 
 def blstm(inp_dim,vocab_size, embed_size, num_classes, learn_rate):
-#     K.clear_session()
     model = Sequential()
     model.add(Embedding(vocab_size, embed_size, input_length=inp_dim, trainable=True))
     model.add(Dropout(0.25))
@@ -99,7 +91,6 @@ class AttLayer(Layer):
         return (input_shape[0], input_shape[-1])
 
 def blstm_atten(inp_dim, vocab_size, embed_size, num_classes, learn_rate):
-#     K.clear_session()
     model = Sequential()
     model.add(Embedding(vocab_size, embed_size, input_length=inp_dim))
     model.add(Dropout(0.25))

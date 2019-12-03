@@ -44,7 +44,24 @@ def get_model(m_type):
     return logreg
 
 
-def train(x_text, labels, model_type, embedding):
+def train(x_text, labels, model_type, embedding, oversampling):
+
+    dict1 = {'L':0,'M':1,'H':2,'none':3}
+    labels = [dict1[b] for b in labels]
+
+    from collections import Counter
+    print(Counter(labels))
+
+    if oversampling:
+        H = [i for i in range(len(labels)) if labels[i]==2]
+        M = [i for i in range(len(labels)) if labels[i]==1]
+        L = [i for i in range(len(labels)) if labels[i]==0]
+        x_text = x_text + [x_text[x] for x in H]*(2)+ [x_text[x] for x in M]*(2)+ [x_text[x] for x in L]*(2)
+        labels = labels + [2 for i in range(len(H))]*(2) + [1 for i in range(len(M))]*(2)+ [0 for i in range(len(L))]*(2)
+        print("Counter after oversampling")
+        from collections import Counter
+        print(Counter(labels))
+
     if(embedding == "word"):
         print("Using word based features")
         bow_transformer = CountVectorizer(analyzer="word",max_features = 10000,stop_words='english').fit(x_text)
@@ -60,11 +77,6 @@ def train(x_text, labels, model_type, embedding):
         comments_tfidf = tfidf_transformer.transform(comments_bow)
         features = comments_tfidf
 
-    dict1 = {'L':0,'M':1,'H':2,'none':3}
-    labels = np.array([dict1[b] for b in labels])
-
-    from collections import Counter
-    print(Counter(labels))
     classification_model(features, labels, model_type)
 
 
@@ -98,7 +110,6 @@ def get_scores(y_true, y_pred):
 
 def print_scores(scores):
     for i in range(N_CLASS):
-        if(i!=0):
             print ("Precision Class %d (avg): %0.3f (+/- %0.3f)" % (i,scores[:, i].mean(), scores[:, i].std() * 2))
             print ("Recall Class %d (avg): %0.3f (+/- %0.3f)" % (i,scores[:,  N_CLASS+i].mean(), scores[:,N_CLASS+i].std() * 2))
             print ("F1_score Class %d (avg): %0.3f (+/- %0.3f)" % (i,scores[:, N_CLASS*2+i].mean(), scores[:,  N_CLASS*2+i].std() * 2))
@@ -111,4 +122,4 @@ formspring_data_file = "C:/Users/kavita/Desktop/BTP Project/DataSets/PKL/Formspr
 
 warnings.filterwarnings("ignore")
 x_text,labels = load_data(formspring_data_file)
-train(x_text, labels, MODEL_TYPES[0],EMBEDDING[0])
+train(x_text, labels, MODEL_TYPES[3],EMBEDDING[1],False)

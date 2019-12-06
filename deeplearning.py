@@ -19,13 +19,16 @@ EPOCHS = 10
 BATCH_SIZE = 128
 TWITTER_DATA_FILE = "C:/Users/kavita/Desktop/BTP Project/DataSets/PKL/TwitterData.pkl"
 FORMSPRING_DATA_FILE = "C:/Users/kavita/Desktop/BTP Project/DataSets/PKL/FormspringData.pkl"
+REDDIT_DATA_FILE = "C:/Users/kavita/Desktop/BTP Project/DataSets/PKL/RedditData.pkl"
 
 
 def run_model(data, oversampling_rate, model_type, vector_type, embed_size):
     if data == "twitter":
         x_text, labels = get_data(data, oversampling_rate, TWITTER_DATA_FILE)
-    else:
+    elif data == "formspring":
         x_text, labels = get_data(data, oversampling_rate, FORMSPRING_DATA_FILE)
+    else:
+        x_text, labels = get_data(data, oversampling_rate, REDDIT_DATA_FILE)
     data_dict = get_train_test(data,  x_text, labels)
     precision, recall, f1_score = train(data_dict, model_type, vector_type, embed_size)
 
@@ -224,8 +227,8 @@ def print_scores(precision_scores, recall_scores, f1_scores):
 MODEL_TYPES = [ 'cnn', 'lstm', 'blstm', 'blstm_attention']
 WORD_VECTOR_TYPES = ["random", "glove" ,"sswe"]
 OVERSAMPLING_RATE = 3
-DATA = ['twitter', 'formspring']
+DATA = ['twitter', 'formspring', 'reddit']
 EMBED_SIZE = [25, 50, 100, 200]
 
 warnings.filterwarnings("ignore")
-run_model(DATA[1], OVERSAMPLING_RATE, MODEL_TYPES[0], WORD_VECTOR_TYPES[2], EMBED_SIZE[1])
+run_model(DATA[2], OVERSAMPLING_RATE, MODEL_TYPES[0], WORD_VECTOR_TYPES[2], EMBED_SIZE[1])

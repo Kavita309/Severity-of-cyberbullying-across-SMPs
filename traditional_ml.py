@@ -119,7 +119,8 @@ MODEL_TYPES = ['random_forest','naive','lr','svm']
 EMBEDDING = ['word', 'char']
 twitter_data_file = "C:/Users/kavita/Desktop/BTP Project/DataSets/PKL/TwitterData.pkl"
 formspring_data_file = "C:/Users/kavita/Desktop/BTP Project/DataSets/PKL/FormspringData.pkl"
+reddit_data_file = "C:/Users/kavita/Desktop/BTP Project/DataSets/PKL/RedditData.pkl"
 
 warnings.filterwarnings("ignore")
-x_text,labels = load_data(formspring_data_file)
+x_text,labels = load_data(reddit_data_file)
 train(x_text, labels, MODEL_TYPES[3],EMBEDDING[1],False)

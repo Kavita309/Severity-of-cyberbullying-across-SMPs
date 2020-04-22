@@ -1,4 +1,4 @@
-# BTP_Project
+## Comparative study for predicting the severity of cyberbullying across multiple Social Media Platforms
 
 
 ## How to run the project?

@@ -71,7 +71,7 @@ def train(x_text, labels, model_type, embedding, oversampling):
         features = comments_tfidf
     else:
         print("Using char n-grams based features")
-        bow_transformer = CountVectorizer(max_features = 10000, ngram_range = (1,2)).fit(x_text)
+        bow_transformer = CountVectorizer(analyzer="char",max_features = 10000, ngram_range = (1,2)).fit(x_text)
         comments_bow = bow_transformer.transform(x_text)
         tfidf_transformer = TfidfTransformer(norm = 'l2').fit(comments_bow)
         comments_tfidf = tfidf_transformer.transform(comments_bow)
